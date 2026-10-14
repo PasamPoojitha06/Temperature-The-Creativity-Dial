@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Temperature: The Creativity Dial</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#070b16;--pn:#0f1629;--ln:#22304f;--tx:#e6ecff;--mu:#8b99bd;--lo:#38bdf8;--me:#fbbf24;--hi:#f472b6;--z:#fbbf24;--fs:17px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:70px}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#14234a 0,var(--bg) 60%) fixed var(--bg);color:var(--tx);font:400 var(--fs)/1.55 'Space Grotesk',system-ui,sans-serif}
+body.pres{--fs:21px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 20px;background:#070b16ee;border-bottom:1px solid var(--ln)}
+header h1{font-size:1.1rem;margin:0;flex:1 1 260px}
+.tv{font-weight:700;font-size:1.3rem;color:var(--z);min-width:5ch;text-align:right;font-variant-numeric:tabular-nums}
+button,select,input[type=text]{font:inherit;color:var(--tx);background:#16213d;border:1px solid var(--ln);border-radius:8px;padding:7px 14px;cursor:pointer}
+button:hover{border-color:var(--lo)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--lo);outline-offset:2px}
+button.on{background:var(--lo);color:#04121f;border-color:var(--lo);font-weight:700}
+button.go{background:var(--z);color:#150d00;font-weight:700;border-color:var(--z)}
+main{max-width:1100px;margin:0 auto;padding:20px}
+section{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:22px;margin:0 0 22px}
+h2{margin:0 0 6px;font-size:1.5rem}
+h3{margin:0 0 6px}
+p{margin:.4em 0}.mu{color:var(--mu)}
+.tag{display:inline-block;font-size:.78rem;border:1px dashed var(--me);color:var(--me);border-radius:6px;padding:2px 8px;margin:2px 0}
+.teacher{display:none;border-left:3px solid var(--hi);padding:4px 12px;background:#1d1230;border-radius:0 8px 8px 0;margin:10px 0}
+body.t .teacher{display:block}body.t .beg{display:none}
+.beg{border-left:3px solid var(--lo);padding:4px 12px;background:#0b1d33;border-radius:0 8px 8px 0;margin:10px 0}
+.grid{display:grid;gap:20px;grid-template-columns:1fr 1fr}
+@media(max-width:800px){.grid,.g3{grid-template-columns:1fr!important}}
+.dial{position:relative;text-align:center}
+.dial svg{width:100%;max-width:440px;filter:drop-shadow(0 0 14px var(--z));transition:filter .3s}
+.big{font-size:4.4rem;font-weight:700;line-height:1;color:var(--z);font-variant-numeric:tabular-nums;text-shadow:0 0 24px var(--z)}
+.zone{font-size:1.3rem;font-weight:700;color:var(--z)}
+input[type=range]{width:100%;height:34px;accent-color:var(--z);cursor:pointer}
+.scale{display:flex;justify-content:space-between;font-size:.85rem;color:var(--mu)}
+.br{display:grid;grid-template-columns:minmax(80px,170px) 1fr 62px;gap:10px;align-items:center;margin:7px 0;padding:2px 6px;border-radius:8px;border:1px solid transparent}
+.br.sel{border-color:var(--z);background:#ffffff0a}
+.bl{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bt{height:20px;background:#0a1020;border-radius:10px;overflow:hidden}
+.bt i{display:block;height:100%;width:0;border-radius:10px;transition:width .5s cubic-bezier(.3,.7,.2,1)}
+.br b{text-align:right;font-variant-numeric:tabular-nums}
+.prompt{font-size:2rem;font-weight:700;margin:8px 0}
+.pick{font-size:1.6rem;font-weight:700;min-height:2.4rem}
+.pick em{font-style:normal;padding:2px 12px;border-radius:8px;background:var(--z);color:#150d00;animation:pop .35s}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.out{min-height:3.2rem;font-size:1.25rem;padding:12px 14px;background:#0a1020;border-radius:10px;border:1px solid var(--ln);margin:10px 0}
+.out .ct{color:var(--z);font-weight:700;animation:pop .35s}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}
+.steps{display:flex;flex-wrap:wrap;gap:8px}
+.steps button{flex:1 1 150px;text-align:left}
+.steps button.on{box-shadow:0 0 14px var(--lo)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+td,th{padding:7px 10px;border-bottom:1px solid var(--ln);text-align:right}td:first-child,th:first-child{text-align:left;font-weight:700}
+.hid{visibility:hidden}
+tr.win td{background:#ffffff12}
+.formula{font:700 1.25rem 'Space Grotesk',monospace;background:#0a1020;border:1px solid var(--lo);border-radius:10px;padding:12px;text-align:center;margin:12px 0;overflow-x:auto}
+.g3{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+.cp{border:1px solid var(--ln);border-radius:12px;padding:16px;background:#0a1020}
+.cp h3{margin-bottom:2px}
+.cp .w{font-size:1.25rem;min-height:5rem}
+.cp .w span{opacity:0;display:inline-block;margin-right:.3em;transition:opacity .4s,transform .4s;transform:translateY(6px)}
+.cp .w span.v{opacity:1;transform:none}
+.cp .w span.d{font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:.8rem;padding:2px 8px;border-radius:999px;background:#16213d;border:1px solid var(--ln)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.cards button{text-align:left;padding:14px;border-radius:12px;background:#0a1020}
+.cards button.on{background:#12294a;color:var(--tx);box-shadow:0 0 0 2px var(--lo)}
+.rng{position:relative;height:16px;background:#0a1020;border-radius:8px;margin:12px 0;overflow:hidden}
+.rng i{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--lo),var(--hi));border-radius:8px;transition:left .5s,width .5s}
+.q{margin:14px 0;padding:14px;border:1px solid var(--ln);border-radius:12px}
+.q button{display:block;width:100%;text-align:left;margin:6px 0}
+.q button.ok{background:#0d3b24;border-color:#34d399}.q button.no{background:#4a1425;border-color:#f43f5e}
+.fb{margin-top:6px;color:var(--mu)}
+.end{font-size:1.5rem;font-weight:700;text-align:center;padding:26px;border:1px solid var(--z);border-radius:14px;box-shadow:0 0 30px #fbbf2430}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<header>
+<h1>AI Temperature: The Creativity Dial</h1>
+<span class="tv" id="hv">0.70</span>
+<button id="mB" class="on">Beginner mode</button><button id="mT">Teacher mode</button>
+<button id="fs">Full screen</button><button id="rs">Reset</button>
+</header>
+<main>
+
+<section id="s1">
+<h2>The creativity dial</h2>
+<p>Temperature changes the <b>probability distribution</b> an AI uses to choose its next token. It does not make the model smarter, and it does not guarantee creativity.</p>
+<div class="grid">
+<div class="dial">
+<svg viewBox="0 0 300 175" role="img" aria-label="Temperature dial">
+<path d="M30 150A120 120 0 0 1 270 150" pathLength="100" fill="none" stroke="#1b2745" stroke-width="22" stroke-linecap="butt"/>
+<path d="M30 150A120 120 0 0 1 270 150" pathLength="100" fill="none" stroke="#38bdf8" stroke-width="22" stroke-dasharray="15 100"/>
+<path d="M30 150A120 120 0 0 1 270 150" pathLength="100" fill="none" stroke="#fbbf24" stroke-width="22" stroke-dasharray="30 100" stroke-dashoffset="-20"/>
+<path d="M30 150A120 120 0 0 1 270 150" pathLength="100" fill="none" stroke="#f472b6" stroke-width="22" stroke-dasharray="40 100" stroke-dashoffset="-60"/>
+<g id="needle" style="transform-origin:150px 150px;transition:transform .5s cubic-bezier(.3,1.4,.4,1)"><line x1="150" y1="150" x2="150" y2="45" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
+<circle cx="150" cy="150" r="11" fill="#fff"/>
+<text x="30" y="172" fill="#8b99bd" font-size="11" text-anchor="middle">0.0</text><text x="270" y="172" fill="#8b99bd" font-size="11" text-anchor="middle">2.0</text>
+</svg>
+<div class="big" id="bigT">0.70</div>
+<div class="zone" id="zn">Medium</div>
+</div>
+<div>
+<input type="range" class="ts" min="0" max="2" step="0.05" value="0.7" aria-label="Temperature">
+<div class="scale"><span>0.0 low</span><span>~0.7 medium</span><span>2.0 high</span></div>
+<p id="zd" style="font-size:1.15rem;margin-top:16px"></p>
+<p class="mu">Illustrative ranges: Low 0.0–0.3 · Medium around 0.7 · High 1.2–2.0. Real models and tools use different scales and defaults.</p>
+<div class="beg"><b>Think of it like this:</b> a low dial means "pick the safest word"; a high dial means "be willing to roll the dice."</div>
+<div class="teacher"><b>Teacher note:</b> Ask students to predict how the bars below will change <i>before</i> moving the slider. Stress that "creative" depends on the task and on judging the result.</div>
+</div>
+</div>
+</section>
+
+<section id="s2">
+<h2>"The sky is ___"</h2>
+<span class="tag">Math toy simulation: fixed logits + softmax(logit / T). Not a real language model. Percentages are computed, not real model outputs.</span>
+<div class="prompt">The sky is <span id="blank" style="color:var(--z)">___</span></div>
+<div class="grid"><div><div id="skyBars"></div></div>
+<div><input type="range" class="ts" min="0" max="2" step="0.05" value="0.7" aria-label="Temperature">
+<div class="row"><button class="go" id="skyGen">Generate again</button><span class="mu" id="skyMode"></span></div>
+<div class="pick" id="skyPick"></div></div></div>
+<div class="teacher">At T = 0 the code skips the division (÷0) and picks the highest logit: greedy / argmax decoding.</div>
+</section>
+
+<section id="s3">
+<h2>Live sentence generation</h2>
+<span class="tag">Toy AI simulation — not a real LLM response.</span>
+<div class="row"><select id="lp" aria-label="Prompt"></select>
+<input type="text" id="lc" placeholder="Type your own prompt" style="display:none;flex:1 1 220px">
+<button class="go" id="lg">Generate</button></div>
+<input type="range" class="ts" min="0" max="2" step="0.05" value="0.7" aria-label="Temperature">
+<div class="out" id="lo"></div>
+<p class="mu">Each prompt has five hand-written continuations with fixed scores. Low temperature usually picks the conventional one; high temperature spreads choices out. Variation is not the same as quality.</p>
+</section>
+
+<section id="s4">
+<h2>How it really works</h2>
+<p>Click a step, or press Play.</p>
+<div class="steps" id="steps"></div>
+<div class="row"><button id="play">Play all steps</button></div>
+<p id="sd" style="font-size:1.1rem;min-height:3.4rem"></p>
+<div class="formula">P(token) = softmax(logit / temperature)</div>
+<div style="overflow-x:auto"><table id="pt"></table></div>
+<div class="out" id="ps" style="margin-top:12px"></div>
+<p class="mu">As temperature approaches zero, selection concentrates on the highest-scoring token. At higher temperatures the distribution flattens. Exact behavior depends on the model and decoding setup.</p>
+<div class="teacher">Softmax: exp(x<sub>i</sub>) divided by the sum of exp(x<sub>j</sub>). Dividing by T &lt; 1 widens gaps between logits; T &gt; 1 shrinks them.</div>
+</section>
+
+<section id="s5">
+<h2>Three settings, side by side</h2>
+<span class="tag">Illustrative outputs, not guaranteed responses.</span>
+<div class="g3" style="margin-top:10px">
+<div class="cp"><h3 style="color:var(--lo)">LOW TEMPERATURE</h3><div class="mu">≈ 0.0–0.3</div><div class="w" data-w="The sky is|blue." data-c="#38bdf8"></div></div>
+<div class="cp"><h3 style="color:var(--me)">MEDIUM TEMPERATURE</h3><div class="mu">≈ 0.7</div><div class="w" data-w="The sky is|beautiful and clear." data-c="#fbbf24"></div></div>
+<div class="cp"><h3 style="color:var(--hi)">HIGH TEMPERATURE</h3><div class="mu">≈ 1.2–2.0</div><div class="w" data-w="The sky is|a giant purple ocean of dreams." data-c="#f472b6"></div></div>
+</div>
+<div class="row"><button id="rp">Replay words</button></div>
+</section>
+
+<section id="s6">
+<h2>You Control the AI</h2>
+<span class="tag">Toy AI simulation — not a real LLM response.</span>
+<div class="row"><select id="ep" aria-label="Experiment prompt"></select>
+<button class="go" id="eg">Generate</button><button id="ea">Generate again</button><button id="ec">Compare low / medium / high</button><button id="er">Reset experiment</button></div>
+<input type="range" class="ts" min="0" max="2" step="0.05" value="0.7" aria-label="Temperature">
+<div class="grid"><div><div id="eb"></div></div><div>
+<div class="out" id="eo"></div>
+<table id="et"></table></div></div>
+<p class="mu">"Different outputs" counts unique sentences in this toy simulation. It is illustrative and does not prove a real model will behave the same way.</p>
+</section>
+
+<section id="s7">
+<h2>Real-life use cases</h2>
+<p class="mu">Click a card. Ranges are starting-point examples, not universal rules.</p>
+<div class="cards" id="cards"></div>
+<div class="rng"><i id="rg"></i></div>
+<p id="cd" style="font-size:1.1rem"></p>
+<button id="cs">Try this range on the dial</button>
+</section>
+
+<section id="s8">
+<h2>Quiz</h2>
+<div id="qz"></div>
+<h3 id="sc"></h3>
+</section>
+
+<div class="end">Temperature is the randomness dial for choosing the next token — lower is generally more predictable, while higher allows more variation.</div>
+</main>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let T=0.7;
+const sm=(l,t)=>{if(t<0.02){const i=l.indexOf(Math.max(...l));return l.map((_,j)=>+(j===i))}const s=l.map(x=>x/t),m=Math.max(...s),e=s.map(x=>Math.exp(x-m)),z=e.reduce((a,b)=>a+b);return e.map(x=>x/z)};
+const pick=p=>{let r=Math.random(),c=0;for(let i=0;i<p.length;i++){c+=p[i];if(r<c)return i}return p.length-1};
+const zone=t=>t<=0.3?0:t<1.1?1:2;
+const ZN=["Low","Medium","High"],ZC=["#38bdf8","#fbbf24","#f472b6"];
+const ZD=["Low: more predictable output. High-probability tokens are strongly favored.","Medium: a balance between predictability and variety.","High: more variation and potentially surprising choices, with a higher risk of odd or incoherent text."];
+const SKY=["blue","beautiful","cloudy","endless","purple"],SL=[3,2.5,1.5,1,.5],SC=["#38bdf8","#f472b6","#94a3b8","#fbbf24","#a78bfa"];
+const P={
+a:{p:"The sky is",c:[["blue.",3],["beautiful and clear.",2.5],["full of clouds today.",1.5],["endless, like a painted dream.",1],["a giant purple ocean of dreams.",.4]]},
+b:{p:"A robot entered the classroom and",c:[["sat down at a desk.",3],["greeted the students politely.",2.6],["asked what we were learning.",1.6],["began teaching the chairs to dance.",.9],["turned into a flock of paper birds.",.2]]},
+c:{p:"The best way to learn programming is",c:[["to practice every day.",3],["to build small projects.",2.6],["to read other people's code.",1.6],["to explain bugs to a rubber duck.",.9],["to teach a houseplant recursion.",.2]]},
+d:{p:"",c:[["to think it through step by step.",2.8],["a question worth exploring.",2.3],["more surprising than expected.",1.4],["wearing a tiny hat of wonder.",.8],["sideways through a purple tunnel.",.2]]}};
+const PC=["#38bdf8","#34d399","#fbbf24","#fb923c","#f472b6"];
+const mk=(el,n,c)=>{el.innerHTML=n.map((x,i)=>`<div class="br"><span class="bl" style="color:${c[i]}" title="${x}">${x}</span><div class="bt"><i style="background:${c[i]}"></i></div><b>0%</b></div>`).join("")};
+const pt=(el,p,s)=>[...el.children].forEach((r,i)=>{r.querySelector("i").style.width=p[i]*100+"%";r.querySelector("b").textContent=(p[i]*100).toFixed(1)+"%";r.classList.toggle("sel",i===s)});
+function opts(sel,custom){sel.innerHTML=`<option value="a">A. The sky is…</option><option value="b">B. A robot entered the classroom and…</option><option value="c">C. The best way to learn programming is…</option><option value="d">D. Enter a custom prompt</option>`}
+opts($("#lp"));opts($("#ep"));
+const ptxt=(k,custom)=>k==="d"?(custom||"My custom prompt"):P[k].p;
+
+/* state */
+let skySel=-1,lastEx=-1,tally,step=0,chosen=0,cs=1;
+const clr=()=>{tally=[0,1,2].map(()=>({n:0,s:new Set()}))};clr();
+
+function update(){
+ const z=zone(T),c=ZC[z];
+ document.documentElement.style.setProperty("--z",c);
+ $$(".ts").forEach(s=>s.value=T);
+ $("#hv").textContent=$("#bigT").textContent=T.toFixed(2);
+ $("#zn").textContent=ZN[z]+" temperature";$("#zd").textContent=ZD[z];
+ $("#needle").style.transform=`rotate(${-90+T/2*180}deg)`;
+ const p=sm(SL,T);pt($("#skyBars"),p,skySel);
+ $("#skyMode").textContent=T<0.02?"T = 0 → greedy (argmax)":"softmax(logit / "+T.toFixed(2)+")";
+ const ep=sm(P[$("#ep").value].c.map(x=>x[1]),T);pt($("#eb"),ep,lastEx);
+ renderProc();
+}
+$$(".ts").forEach(s=>s.addEventListener("input",()=>{T=+s.value;skySel=-1;lastEx=-1;chosen=pick(sm(SL,T));$("#skyPick").innerHTML="";$("#blank").textContent="___";update()}));
+
+/* s2 */
+function skyGen(){const p=sm(SL,T);skySel=pick(p);$("#blank").textContent=SKY[skySel];$("#skyPick").innerHTML=`Selected: <em style="background:${SC[skySel]}">${SKY[skySel]}</em> <span class="mu" style="font-size:1rem">(${(p[skySel]*100).toFixed(1)}% chance)</span>`;update()}
+$("#skyGen").onclick=skyGen;
+
+/* s3 */
+$("#lp").onchange=()=>{$("#lc").style.display=$("#lp").value==="d"?"":"none"};
+function gen(k,custom){const c=P[k].c,i=pick(sm(c.map(x=>x[1]),T));return{i,t:c[i][0],pre:ptxt(k,custom)}}
+$("#lg").onclick=()=>{const r=gen($("#lp").value,$("#lc").value.trim()),o=$("#lo");o.textContent=r.pre+" ";const s=document.createElement("span");s.className="ct";s.textContent=r.t;o.append(s)};
+
+/* s4 */
+const ST=[["Input prompt","The model receives the prompt: “The sky is ___”. Our toy model only looks at five candidate next words."],
+["Assign scores (logits)","The model gives every candidate a raw score called a logit. Bigger score means the model likes that word more."],
+["Divide by temperature","Each logit is divided by the temperature. Small T stretches the gaps between scores; large T squeezes them together."],
+["Apply softmax","Softmax turns the scaled scores into probabilities that are positive and add up to 100%."],
+["Select the next token","One token is chosen at random using those probabilities. At T = 0 the top token is simply taken (greedy)."],
+["Append and repeat","The chosen token joins the sentence, and the whole process starts again for the following token."]];
+$("#steps").innerHTML=ST.map((s,i)=>`<button data-i="${i}">${i+1}. ${s[0]}</button>`).join("");
+$$("#steps button").forEach(b=>b.onclick=()=>{stopPlay();step=+b.dataset.i;if(step>=4)chosen=pick(sm(SL,T));renderProc()});
+let tm;const stopPlay=()=>{clearInterval(tm);tm=0;$("#play").textContent="Play all steps"};
+$("#play").onclick=()=>{if(tm){stopPlay();return}$("#play").textContent="Stop";step=0;chosen=pick(sm(SL,T));renderProc();tm=setInterval(()=>{if(step>=5){stopPlay();return}step++;renderProc()},1800)};
+function renderProc(){
+ $$("#steps button").forEach((b,i)=>b.classList.toggle("on",i===step));
+ $("#sd").textContent=ST[step][1];
+ const g=T<0.02,p=sm(SL,T),e=SL.map(x=>g?null:Math.exp(x/T-Math.max(...SL)/T));
+ const v=(k,x)=>`<td class="${step>=k?"":"hid"}">${x}</td>`;
+ $("#pt").innerHTML=`<tr><th>Token</th><th class="${step>=1?"":"hid"}">Logit</th><th class="${step>=2?"":"hid"}">÷ T</th><th class="${step>=3?"":"hid"}">Probability</th></tr>`+
+ SKY.map((s,i)=>`<tr class="${step>=4&&i===chosen?"win":""}"><td style="color:${SC[i]}">${s}${step>=4&&i===chosen?" ◀ chosen":""}</td>${v(1,SL[i].toFixed(1))}${v(2,g?"÷0 → greedy":(SL[i]/T).toFixed(2))}${v(3,(p[i]*100).toFixed(1)+"%")}</tr>`).join("");
+ $("#ps").innerHTML=step===0?"The sky is ___":step<4?"The sky is ___":step===4?`The sky is <b style="color:${SC[chosen]}">${SKY[chosen]}</b>`:`The sky is <b style="color:${SC[chosen]}">${SKY[chosen]}</b> ___ <span class="mu">(next token…)</span>`;
+}
+
+/* s5 */
+let ws=[];
+function replay(){ws.forEach(clearTimeout);ws=[];let d=0;$$(".w").forEach(w=>{const[a,b]=w.dataset.w.split("|");w.innerHTML=[...a.split(" "),...b.split(" ")].map((x,i)=>`<span class="${i>=3?"d":""}" style="${i>=3?"color:"+w.dataset.c:""}">${x}</span>`).join("");[...w.children].forEach((s,i)=>ws.push(setTimeout(()=>s.classList.add("v"),300+i*350)))})}
+$("#rp").onclick=replay;replay();
+
+/* s6 */
+const ek=()=>$("#ep").value;
+function exGen(){const k=ek(),r=gen(k,""),z=zone(T);lastEx=r.i;tally[z].n++;tally[z].s.add(r.t);const o=$("#eo");o.textContent=r.pre+" ";const s=document.createElement("span");s.className="ct";s.textContent=r.t;o.append(s);update();tbl()}
+function tbl(){$("#et").innerHTML="<tr><th>Setting</th><th>Runs</th><th>Different outputs</th></tr>"+tally.map((t,i)=>`<tr><td style="color:${ZC[i]}">${ZN[i]}</td><td>${t.n}</td><td>${t.s.size}</td></tr>`).join("")}
+$("#ep").onchange=()=>{mk($("#eb"),P[ek()].c.map(x=>x[0]),PC);lastEx=-1;clr();tbl();$("#eo").textContent="";update()};
+$("#eg").onclick=$("#ea").onclick=exGen;
+$("#ec").onclick=()=>{const k=ek(),c=P[k].c.map(x=>x[1]);[0.2,0.7,1.6].forEach((t,z)=>{const p=sm(c,t);for(let n=0;n<12;n++){const i=pick(p);tally[z].n++;tally[z].s.add(P[k].c[i][0])}});$("#eo").textContent="Ran 12 generations each at T = 0.2, 0.7 and 1.6.";tbl()};
+$("#er").onclick=()=>{clr();lastEx=-1;$("#eo").textContent="";tbl();update()};
+
+/* s7 */
+const UC=[["Factual questions","Predictable answers are often preferred.",0,.3],["Coding","Consistency is often useful, though the best setting depends on the task.",0,.4],["Brainstorming","More variation can help you see new ideas.",.9,1.3],["Creative writing","Higher values may encourage diverse ideas but can reduce coherence.",1,1.5],["Customer support","Predictable, reliable answers are often preferred.",0,.4]];
+$("#cards").innerHTML=UC.map((u,i)=>`<button data-i="${i}"><b>${u[0]}</b><br><span class="mu">${u[1]}</span></button>`).join("");
+$$("#cards button").forEach(b=>b.onclick=()=>{cs=+b.dataset.i;$$("#cards button").forEach(x=>x.classList.toggle("on",x===b));const u=UC[cs];$("#rg").style.left=u[2]/2*100+"%";$("#rg").style.width=(u[3]-u[2])/2*100+"%";$("#cd").innerHTML=`<b>${u[0]}:</b> example starting range <b>${u[2].toFixed(1)}–${u[3].toFixed(1)}</b>. This is a starting point, not a universal rule. Test and adjust for your model and task.`});
+$("#cs").onclick=()=>{const u=UC[cs];T=(u[2]+u[3])/2;skySel=-1;update()};
+
+/* s8 */
+const Q=[["If we increase temperature, does the AI become more intelligent?",["Yes, it thinks harder","No, it changes how random the token choice is","Yes, but only for coding","No, it shrinks the model"],1,"No. Temperature changes the randomness of token selection, not the model's underlying intelligence."],
+["What does temperature change?",["The model's training data","The size of the vocabulary","The probability distribution used to pick the next token","The speed of the computer"],2,"Logits are divided by temperature before softmax, which reshapes the probabilities."],
+["In our toy simulation, what happens at temperature 0?",["It divides by zero and crashes","The top-scoring token is picked (greedy / argmax)","All tokens are equally likely","Nothing is generated"],1,"Dividing by zero is undefined, so we use the greedy rule: take the highest score."],
+["Which setting is often a sensible starting point for factual questions?",["Low temperature","Maximum temperature","It never matters","Negative temperature"],0,"Lower values give more predictable output. Still, it depends on the model and task."],
+["What happens to the probability distribution as temperature rises?",["It gets sharper","It gets flatter","It disappears","It always picks the last token"],1,"Higher temperature squeezes logit gaps, so unlikely tokens get a bigger share."]];
+let score=0,ans=0;
+$("#qz").innerHTML=Q.map((q,i)=>`<div class="q"><b>${i+1}. ${q[0]}</b>${q[1].map((o,j)=>`<button data-q="${i}" data-o="${j}">${o}</button>`).join("")}<div class="fb"></div></div>`).join("");
+$$(".q").forEach((d,i)=>d.querySelectorAll("button").forEach(b=>b.onclick=()=>{if(d.dataset.done)return;d.dataset.done=1;ans++;const j=+b.dataset.o,ok=j===Q[i][2];if(ok)score++;b.classList.add(ok?"ok":"no");d.querySelectorAll("button")[Q[i][2]].classList.add("ok");d.querySelector(".fb").textContent=(ok?"Correct. ":"Not quite. ")+Q[i][3];$("#sc").textContent=ans===5?`Score: ${score} / 5`:`Answered ${ans} / 5`}));
+
+/* chrome */
+$("#mB").onclick=()=>{document.body.classList.remove("t");$("#mB").classList.add("on");$("#mT").classList.remove("on")};
+$("#mT").onclick=()=>{document.body.classList.add("t");$("#mT").classList.add("on");$("#mB").classList.remove("on")};
+$("#fs").onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){document.body.classList.toggle("pres")}};
+document.addEventListener("fullscreenchange",()=>document.body.classList.toggle("pres",!!document.fullscreenElement));
+$("#rs").onclick=()=>{T=.7;skySel=-1;lastEx=-1;step=0;stopPlay();clr();tbl();$("#skyPick").innerHTML="";$("#blank").textContent="___";$("#lo").textContent="";$("#eo").textContent="";$("#lp").value=$("#ep").value="a";$("#lc").value="";$("#lc").style.display="none";mk($("#eb"),P.a.c.map(x=>x[0]),PC);chosen=pick(sm(SL,T));$$("#qz .q").forEach(d=>{delete d.dataset.done;d.querySelectorAll("button").forEach(b=>b.className="");d.querySelector(".fb").textContent=""});score=ans=0;$("#sc").textContent="";update();replay()};
+mk($("#skyBars"),SKY,SC);mk($("#eb"),P.a.c.map(x=>x[0]),PC);chosen=pick(sm(SL,T));
+$$("#cards button")[0].click();tbl();update();
+</script>
+</body></html>
